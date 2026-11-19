@@ -1,0 +1,10 @@
+{"question": "What does Reciprocal Rank Fusion compute?", "relevant_sources": ["retrieval.md"], "keywords": ["1 divided by"]}
+{"question": "Why is BM25 weak at synonyms?", "relevant_sources": ["retrieval.md"], "keywords": ["synonyms"]}
+{"question": "How much chunk overlap is typical?", "relevant_sources": ["chunking.md"], "keywords": ["10 to 20 percent"]}
+{"question": "What is MRR?", "relevant_sources": ["evaluation.md"], "keywords": ["Mean Reciprocal Rank"]}
+{"question": "How do I stop the model from hallucinating?", "relevant_sources": ["production.md"], "keywords": ["abstention"]}
+{"question": "When should I use approximate nearest neighbour indexes like HNSW?", "relevant_sources": ["production.md"], "keywords": ["HNSW"]}
+{"question": "What is parent-document retrieval?", "relevant_sources": ["chunking.md"], "keywords": ["parent"]}
+{"question": "Why use a cross-encoder reranker only on top candidates?", "relevant_sources": ["retrieval.md"], "keywords": ["cross-encoder"]}
+{"question": "How do I only re-embed changed files?", "relevant_sources": ["production.md"], "keywords": ["content hash"]}
+{"question": "What metrics judge faithfulness of generated answers?", "relevant_sources": ["evaluation.md"], "keywords": ["faithfulness"]}
