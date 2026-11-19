@@ -20,7 +20,21 @@ A compact, production-style Retrieval-Augmented Generation pipeline: ingest docu
 | Eval harness (Hit@k, MRR) in CI | Prevents silent quality regressions when changing chunking/models |
 | Index-embedder mismatch guard | Fails loudly instead of returning garbage |
 
-## Quickstart
+![UI screenshot](docs/screenshot.png)
+
+## Run the full app locally (backend + frontend)
+Prereqs: Python 3.10+, Node 18+.
+```bash
+python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"
+export ANTHROPIC_API_KEY=sk-ant-...                   # optional; without it answers are extractive
+npm install                                           # installs root + frontend deps
+npm run dev                                           # FastAPI on :8000 + React (Vite) on :5173
+```
+Open http://localhost:5173 — the sample docs are indexed on first start; upload your own PDF/MD/TXT from the sidebar,
+switch retrieval mode (hybrid / dense / BM25), and click `[n]` citations to jump to the source passage.
+
+## CLI / API only
 ```bash
 pip install -e ".[dev]"            # add ".[local]" for sentence-transformers + cross-encoder
 cp .env.example .env && export ANTHROPIC_API_KEY=sk-ant-...
@@ -51,7 +65,7 @@ curl -X POST localhost:8000/ask -H 'content-type: application/json' -d '{"questi
 > The demo corpus is only 8 chunks, so these numbers show the harness works, not benchmark-grade quality. Point `ragpipe ingest` at your own corpus and extend the dataset to 50+ questions for meaningful numbers.
 
 ## Project layout
-`src/ragpipe/` — `loaders` · `chunking` · `embeddings` · `bm25` · `store` · `retriever` (RRF + rerankers) · `generator` (Claude) · `pipeline` · `evaluate` · `api` · `cli`; `tests/` — unit + integration tests.
+`frontend/` — React + Vite UI · `src/ragpipe/` — `loaders` · `chunking` · `embeddings` · `bm25` · `store` · `retriever` (RRF + rerankers) · `generator` (Claude) · `pipeline` · `evaluate` · `api` (ask, upload, stats, delete) · `cli`; `tests/` — unit + integration tests.
 
 ## Roadmap
 - Swap `VectorStore` for Qdrant/pgvector (HNSW) at scale

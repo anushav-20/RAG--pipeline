@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Production-style RAG pipeline: hybrid retrieval (BM25 + dense, RRF), reranking, cited answers with Claude, evaluation, FastAPI."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["numpy>=1.26", "pypdf>=4.0", "anthropic>=0.40", "fastapi>=0.110", "uvicorn>=0.29", "pydantic>=2.6"]
+dependencies = ["numpy>=1.26", "pypdf>=4.0", "anthropic>=0.40", "fastapi>=0.110", "uvicorn>=0.29", "pydantic>=2.6", "python-multipart>=0.0.9"]
 
 [project.optional-dependencies]
 local = ["sentence-transformers>=3.0"]

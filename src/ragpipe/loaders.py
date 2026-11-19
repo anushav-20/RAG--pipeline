@@ -20,6 +20,8 @@ def load_file(path: Path) -> list[tuple[str, dict]]:
 
 def iter_documents(root: str | Path):
     root = Path(root)
+    if not root.exists():
+        return
     files = [root] if root.is_file() else sorted(p for p in root.rglob("*") if p.suffix.lower() in SUPPORTED)
     for f in files:
         for text, meta in load_file(f):

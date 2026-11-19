@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import os
+import re
 
+from .bm25 import tokenize
 from .types import Hit
 
 SYSTEM = """You answer questions using ONLY the numbered context passages provided.
@@ -40,13 +42,26 @@ class ClaudeGenerator:
 
 
 class ExtractiveGenerator:
-    """No-LLM fallback so the pipeline runs without an API key (demo/tests)."""
+    """No-LLM fallback (demo/tests): returns the sentences from the top passages that best
+    overlap the question, each tagged with its citation number."""
 
     def generate(self, question: str, hits: list[Hit]) -> str:
         if not hits:
             return NO_ANSWER
-        best = hits[0]
-        return f"{best.chunk.text.strip()[:400]} [1]"
+        q = set(tokenize(question))
+        scored = []
+        for n, h in enumerate(hits[:3], 1):
+            for sent in re.split(r"(?<=[.!?])\s+|\n+", h.chunk.text):
+                if sent.strip().startswith("#") or len(sent.strip()) < 25:
+                    continue
+                overlap = len(q & set(tokenize(sent)))
+                if overlap:
+                    scored.append((overlap, -n, sent.strip(), n))
+        if not scored:
+            return NO_ANSWER
+        scored.sort(reverse=True)
+        best = [t for t in scored[:2] if t[0] >= max(2, scored[0][0] * 0.6)] or scored[:1]
+        return " ".join(f"{s} [{n}]" for _, _, s, n in best)
 
 
 def get_generator(model: str, max_tokens: int):

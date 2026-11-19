@@ -65,3 +65,17 @@ def test_api(pipe, monkeypatch):
     r = c.post("/ask", json={"question": "What is MRR?"}).json()
     assert r["citations"] and r["citations"][0]["source"] == "evaluation.md"
     assert c.post("/ask", json={"question": ""}).status_code == 422
+
+
+def test_upload_and_delete(pipe, tmp_path, monkeypatch):
+    from ragpipe import api
+
+    monkeypatch.setattr(api, "UPLOAD_DIR", str(tmp_path / "up"))
+    api._pipe = pipe
+    c = TestClient(api.app)
+    r = c.post("/upload", files=[("files", ("zebra.md", b"The zebra migration happens in Kenya every July.", "text/markdown"))])
+    assert r.status_code == 200 and "zebra.md" in [d["name"] for d in r.json()["documents"]]
+    ans = c.post("/ask", json={"question": "Where does the zebra migration happen?"}).json()
+    assert ans["citations"][0]["source"] == "zebra.md"
+    assert c.post("/upload", files=[("files", ("evil.exe", b"x", "application/octet-stream"))]).status_code == 400
+    assert "zebra.md" not in [d["name"] for d in c.delete("/documents/zebra.md").json()["documents"]]
